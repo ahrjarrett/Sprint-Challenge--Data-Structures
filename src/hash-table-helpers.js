@@ -19,6 +19,7 @@ class LimitedArray {
       cb(this.storage[i], i);
     }
   }
+
   // Use this getter function to fetch elements from this class
   get(index) {
     this.checkLimit(index);
