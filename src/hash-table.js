@@ -19,7 +19,7 @@ class HashTable {
     const index = getIndexBelowMax(key.toString(), this.limit);
     let bucket = this.storage.get(index) || new DLL()
 
-    const node = { value: key, next: null }
+    const node = { value: key }
     bucket.delete(node)
     bucket.addToTail([key, value])
 
@@ -74,8 +74,10 @@ class HashTable {
 
 const hash = new HashTable()
 hash.insert(5, 'five')
-hash.insert(5, 'five')
+hash.insert(7, 'seven')
+hash.insert(4, 'four')
+hash.insert(4, 'four')
 
-console.log(hash)
+hash.storage.each(b => console.log(b))
 
 module.exports = HashTable;

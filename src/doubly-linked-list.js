@@ -23,7 +23,6 @@ class DoublyLinkedList {
     const node = {
       value,
       next: null,
-      prev: this.tail,
     };
     if (!this.head) {
       this.head = node;
@@ -63,10 +62,14 @@ class DoublyLinkedList {
   }
 
   delete(node) {
-    const value = node.value;
+    if (!this.head || !this.head.next) {
+      this.head = null;
+      this.tail = null;
+      return;
+    }
+
     let current = this.head;
-    if (this.head === null) return;
-    while (current.value !== value) {
+    while (current.value !== node.value) {
       current = current.next;
     }
 
@@ -101,5 +104,17 @@ class DoublyLinkedList {
     this.addToTail(node.value);
   }
 }
+
+const list = new DoublyLinkedList()
+list.addToTail(5)
+list.addToTail(1)
+console.log(list)
+list.addToTail(7)
+list.delete({ value: 7 })
+list.delete({ value: 5 })
+list.delete({ value: 1 })
+list.delete({ value: 1 })
+list.addToTail(2)
+console.log(list)
 
 module.exports = DoublyLinkedList;
