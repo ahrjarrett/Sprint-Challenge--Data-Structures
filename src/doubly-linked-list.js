@@ -1,3 +1,5 @@
+/* eslint-disable arrow-parens */
+
 const Node = require('./node');
 
 class DoublyLinkedList {
@@ -6,34 +8,30 @@ class DoublyLinkedList {
   }
 
   addToHead(value) {
-    const node = new Node({
-      value,
-      next: this.head,
-      prev: null,
-    });
+    const node = new Node({ value });
+    node.setNext(this.head);
+    node.setPrev(null);
 
     if (!this.head) {
       this.head = node;
       this.tail = node;
       return;
     }
-    this.head.prev = node;
+    this.head.setPrev(node);
     this.head = node;
   }
 
   addToTail(value) {
-    const node = new Node({
-      value,
-      next: null,
-      prev: this.tail,
-    });
+    const node = new Node({ value });
+    node.setNext(null);
+    node.setPrev(this.tail);
 
     if (!this.head) {
       this.head = node;
       this.tail = node;
       return;
     }
-    this.tail.next = node;
+    this.tail.setNext(node);
     this.tail = node;
   }
 
@@ -45,9 +43,9 @@ class DoublyLinkedList {
       return removed;
     }
     const removed = this.head;
-    this.head = this.head.next;
-    this.head.prev = null;
-    removed.next = null;
+    this.head = this.head.getNext();
+    this.head.setPrev(null);
+    removed.setNext(null);
     return removed;
   }
 
@@ -59,31 +57,27 @@ class DoublyLinkedList {
       return removed;
     }
     const removed = this.tail;
-    this.tail = this.tail.prev;
-    this.tail.next = null;
-    removed.prev = null;
+    this.tail = this.tail.getPrev();
+    this.tail.setNext(null);
+    removed.setPrev(null);
     return removed;
   }
 
   // delete :: Node -> Node | undefined
   delete(node) {
-    const recurse = n => {
-      if (!n) return undefined;
-      if (n.equals(node)) {
-        if (!n.prev) {
-          this.removeFromHead();
-        } else if (!n.next) {
-          this.removeFromTail();
-        } else {
-          n.next.prev = n.prev;
-          n.prev.next = n.next;
-          n = null;
-        }
-        return n;
-      }
-      return recurse(n.next);
-    };
-    return recurse(this.head);
+    let n = this.find(node);
+    if (!n) return undefined;
+
+    if (!n.getPrev()) {
+      this.removeFromHead();
+    } else if (!n.getNext()) {
+      this.removeFromTail();
+    } else {
+      n.getNext().setPrev(n.getPrev());
+      n.getPrev().setNext(n.getNext());
+      n = null;
+    }
+    return n;
   }
 
   // find :: Node -> Node | undefined
@@ -91,7 +85,7 @@ class DoublyLinkedList {
     const recurse = n => {
       if (!n) return undefined;
       if (n.equals(node)) return n;
-      return recurse(n.next);
+      return recurse(n.getNext());
     };
     return recurse(this.head);
   }
@@ -101,7 +95,7 @@ class DoublyLinkedList {
     const recurse = n => {
       if (!n) return;
       cb(n);
-      return recurse(n.next);
+      return recurse(n.getNext());
     };
     recurse(this.head);
   }

@@ -1,5 +1,7 @@
 /* eslint-disable no-unused-vars */
 /* eslint-disable class-methods-use-this */
+/* eslint-disable arrow-parens */
+
 const { LimitedArray, getIndexBelowMax } = require('./hash-table-helpers');
 const DLL = require('./doubly-linked-list');
 const Node = require('./node');
@@ -13,7 +15,7 @@ class HashTable {
   insert(key, value) {
     if (this.capacityIsFull()) this.resize();
     const index = getIndexBelowMax(key.toString(), this.limit);
-    let bucket = this.storage.get(index) || new DLL();
+    const bucket = this.storage.get(index) || new DLL();
     const node = new Node({ value: [key, value] });
     bucket.delete(node);
     bucket.addToHead([key, value]);
@@ -22,7 +24,7 @@ class HashTable {
 
   remove(key) {
     const index = getIndexBelowMax(key.toString(), this.limit);
-    let bucket = this.storage.get(index);
+    const bucket = this.storage.get(index);
     if (!bucket) return undefined;
     return bucket.delete(new Node({ value: [key] }));
   }
